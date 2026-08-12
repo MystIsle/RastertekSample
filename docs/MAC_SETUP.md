@@ -81,7 +81,8 @@ Gcenx가 패키징한 Apple GPTK 3.0. **D3DMetal(D3D11/12→Metal)이 내장**�
   벤더링해두었고, mingw 빌드에서만 include 경로가 우선 적용된다 (Windows에선 SDK 것을 그대로 사용)
 - `sprintf_s` 등 `_s` 계열 함수는 `#ifdef _MSC_VER` 분기 (Check.h 참고)
 - 셰이더: `D3DCompileFromFile`(HLSL 런타임 컴파일)은 Wine의 d3dcompiler로 동작한다. 튜토리얼 진행에 문제 없음
-- 디버깅: 맥에서는 printf/OutputDebugString 수준 (`WINEDEBUG` 환경변수 활용). 본격 그래픽 디버깅(RenderDoc, PIX)은 Windows에서
+- 디버깅: 맥에서는 printf/OutputDebugString 수준 (`WINEDEBUG` 환경변수 활용).
+  브레이크포인트/그래픽 디버깅 선택지는 `docs/MAC_DEBUGGING.md` 참고 (GPTK Metal 캡처, VM, winedbg 등)
 
 ## 한계 (알고 시작하기)
 
