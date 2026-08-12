@@ -9,6 +9,7 @@
                  WORKING_DIR="file://$PROJECT_DIR$">
     <envs>
       <env name="WINEPREFIX" value="$PROJECT_DIR$/.wineprefix" />
+      <env name="WINEDEBUG" value="-all" />
     </envs>
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
