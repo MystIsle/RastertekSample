@@ -16,6 +16,12 @@
       "inherits": "mac-mingw-debug",
       "binaryDir": "${sourceDir}/build-mac-release",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "windows-msvc",
+      "displayName": "Windows (MSVC)",
+      "binaryDir": "${sourceDir}/build-win",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     }
   ],
   "buildPresets": [
