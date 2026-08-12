@@ -55,8 +55,23 @@ gdb build-mac/RastertekSample.exe
 - **함정: winedbg는 유닉스식 경로를 못 받는다** — `Z:\Users\...` Windows식 경로 필수 (스크립트가 자동 변환)
 - wine-devel에는 D3DMetal이 없어 D3D11 디바이스 생성은 실패한다 → **D3D 초기화 이전/이후의 C++ 로직 디버깅용**.
   렌더링 자체는 GPTK로 실행하고, 렌더링 문제는 3번(Metal 캡처)으로
-- IDE 연결: **Rider는 Remote GDB 구성이 없어 불가.** VS Code cppdbg(`miDebuggerServerAddress`)나
-  CLion Remote Debug로 프런트엔드를 얹는 것은 가능할 것으로 보임 (미실측)
+- IDE 연결: **Rider는 Remote GDB 구성이 없어 불가.** **CLion으로는 GUI 디버깅 실증됨** (아래 참고).
+  VS Code cppdbg(`miDebuggerServerAddress`)도 가능할 것으로 보임 (미실측)
+
+### CLion 연동 (2026.2에서 확인된 절차)
+
+`.run/Remote Debug (winedbg).run.xml` 구성이 있지만, CLion 쪽 **IDE 설정 두 개는 수동**으로
+한 번 해줘야 한다 (IDE 수준 설정이라 리포지토리로 전달 안 됨):
+
+1. **디버그 프로파일에 GDB 추가**: 툴바의 "LLDB ▼" 드롭다운 → "디버그 프로파일 편집..." →
+   ➕ GDB → `/opt/homebrew/bin/gdb` 지정 → 그 드롭다운에서 GDB 프로파일 선택
+   (gdb 17.2 버전 경고는 무시해도 됨)
+2. **Remote Debug 구성 확인**: 구성 편집에서 연결 `tcp:localhost:2159`,
+   심볼 파일 `build-mac/RastertekSample.exe`, 경로 매핑 비움
+3. 사용: "Wine 디버그 서버" ▶ (대기 확인) → "Remote Debug (winedbg)" 🐞.
+   서버는 세션 1회용이라 디버깅 끝나면 다시 ▶.
+4. 주의: CMake 프로젝트로 열어야 함 (일반 폴더로 열리면 CMakeLists.txt 우클릭 → Load CMake Project).
+   CMake 프로필은 Rider와 동일하게 `macOS mingw (Debug)` 프리셋 활성화 + 기본 Debug 비활성화.
 
 ## 3. GPU/셰이더 디버깅 — GPTK Metal 캡처 (의외의 수확)
 
