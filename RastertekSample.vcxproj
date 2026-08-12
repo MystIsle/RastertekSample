@@ -124,12 +124,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Framework\ApplicationClass.cpp" />
+    <ClCompile Include="Framework\D3DClass.cpp" />
     <ClCompile Include="Framework\InputClass.cpp" />
     <ClCompile Include="Framework\SystemClass.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\ApplicationClass.h" />
+    <ClInclude Include="Framework\Check.h" />
+    <ClInclude Include="Framework\D3DClass.h" />
     <ClInclude Include="Framework\InputClass.h" />
     <ClInclude Include="Framework\SystemClass.h" />
   </ItemGroup>
