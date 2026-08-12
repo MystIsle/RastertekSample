@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RastertekSample (Wine)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$CMakeCurrentProductFile$" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="RastertekSample" CONFIG_NAME="mac-mingw-debug" RUN_PATH="/opt/homebrew/bin/wine64">
+  <configuration default="false" name="RastertekSample (Wine)" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$CMakeCurrentProductFile$" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RastertekSample" TARGET_NAME="RastertekSample" CONFIG_NAME="mac-mingw-debug" RUN_PATH="/opt/homebrew/bin/wine64">
     <envs>
       <env name="WINEPREFIX" value="$USER_HOME$/Library/Caches/RastertekSample/wineprefix" />
       <env name="WINEDEBUG" value="-all" />
