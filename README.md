@@ -7,7 +7,7 @@
 ## 진행 상황
 
 - ✅ Tutorial 2 — 프레임워크와 창 생성
-- 🚧 Tutorial 3 — DirectX 11 초기화 (진행 중)
+- ✅ Tutorial 3 — DirectX 11 초기화 (macOS에선 GPTK/D3DMetal로 실행 확인)
 
 ## 빌드
 
@@ -27,7 +27,7 @@ Framework/
   SystemClass             창 생성, 메시지 루프
   InputClass              키보드 입력
   ApplicationClass        프레임 루프
-  D3DClass                D3D11 초기화 (작성 중)
+  D3DClass                D3D11 초기화
   Check.h                 HRESULT/포인터 검사 매크로
 external/DirectXMath/     MS 공식 DirectXMath (mingw 빌드용 벤더링)
 cmake/, scripts/          macOS 크로스컴파일 툴체인/스크립트

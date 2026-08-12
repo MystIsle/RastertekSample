@@ -1,13 +1,13 @@
 # RastertekSample
 
-Rastertek DirectX 11 튜토리얼 학습 프로젝트 (내일배움캠프 온보딩, 현재 튜토리얼 2 완료).
+Rastertek DirectX 11 튜토리얼 학습 프로젝트 (내일배움캠프 온보딩, 현재 튜토리얼 3 완료).
 
 ## 프로젝트 목표
 
 - Windows(Win32 + D3D11) 코드로 Rastertek 튜토리얼을 진행한다
 - **macOS에서도 개발/실행한다** — 단, Metal 포팅이 아니라 크로스컴파일 + Wine 방식:
   - mingw-w64로 Windows x64 `.exe` 크로스컴파일
-  - Wine(wine-stable) + DXMT(또는 GPTK/D3DMetal)로 실행
+  - Wine(GPTK, D3DMetal 내장)로 실행
 - 코드는 100% Windows 코드 유지. 플랫폼 분기 없음. 브랜치는 `master` 하나.
 
 ## 빌드 시스템 (이원화)
@@ -24,10 +24,8 @@ macOS 빌드/실행:
 ./scripts/mac-run.sh     # → WINEPREFIX=.wineprefix 로 wine 실행
 ```
 
-사전 요구사항: `brew install cmake ninja mingw-w64` + `brew install --cask wine-stable`
-(구 `gcenx/wine/wine-crossover` cask는 2026-04 삭제됨. `wine-stable`도 deprecated라 2026-09 이후엔
-[Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds/releases)에서 직접 받는다.
-Gatekeeper에 막히면 `xattr -dr com.apple.quarantine "/Applications/Wine Stable.app"`)
+사전 요구사항: `brew install cmake ninja mingw-w64` + `brew trust gcenx/wine && brew install --cask game-porting-toolkit`
+(D3DMetal 내장이라 D3D11이 바로 동작. wine-stable/DXMT/wine-crossover를 쓰지 않는 이유는 `docs/MAC_SETUP.md` 참고)
 상세 가이드: `docs/MAC_SETUP.md`
 
 ## 코드 구조
@@ -37,7 +35,7 @@ Gatekeeper에 막히면 `xattr -dr com.apple.quarantine "/Applications/Wine Stab
 - `Framework/SystemClass` — 창 생성, 메시지 루프 (튜토리얼 2 완료 상태)
 - `Framework/InputClass` — 키보드 입력
 - `Framework/ApplicationClass` — 프레임 루프 (아직 D3DClass 미연결)
-- `Framework/D3DClass` — D3D11 초기화 **작성 중** (Initialize가 미완성, 튜토리얼 3 진행 예정)
+- `Framework/D3DClass` — D3D11 초기화 (튜토리얼 3 완료: 디바이스/스왑체인/깊이버퍼/래스터라이저/행렬)
 - `Framework/Check.h` — HRESULT/포인터/bool 공용 검사 매크로 (`CHECK_RETURN`)
 - `external/DirectXMath/` — 공식 Microsoft DirectXMath 헤더 벤더링 (mingw 빌드 전용. mingw-w64 내장 `directxmath.h`는 `XMMATRIX` 없는 스텁이라 대체)
 
@@ -53,14 +51,10 @@ MSVC와 mingw-w64(GCC) 둘 다에서 컴파일되어야 한다:
 
 ## 다음 할 일
 
-macOS 첫 세팅은 **완료됨** (2026-08-12): wine-stable 11.0 설치, `mac-build.sh` 빌드 및
-`mac-run.sh` 실행("Engine" 창 생성) 확인. gstreamer-runtime cask는 sudo가 필요해 건너뜀
-(미디어 재생용이라 튜토리얼에는 불필요 — 필요해지면 `brew install --cask gstreamer-runtime`).
-
-1. 튜토리얼 3 (D3D11 초기화) 진행 시:
-   - `D3DClass::Initialize` 완성 (현재 미완성 — 반환문 없음)
-   - D3D11 디바이스가 실제 생성되면 DXMT 설치 필요: https://github.com/3Shain/dxmt (wiki의 Installation Guide 참고. 최신 DXMT는 Wine 10.18+ 지원 — 현재 설치된 wine-stable 11.0이면 충분)
-2. Rider 사용 시: 2026.1+ 필요, CMake options에 `-DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-mingw-x86_64.cmake`
+- macOS 세팅 **완료** (2026-08-12): GPTK(D3DMetal) 설치, 튜토리얼 3의 D3D11 초기화까지 macOS에서 실행 확인
+- 다음: 튜토리얼 4 (버퍼, 셰이더, 삼각형 렌더링) — ColorShaderClass/ModelClass/CameraClass 추가.
+  새 소스는 vcxproj와 CMakeLists.txt **양쪽에** 등록할 것. HLSL은 `D3DCompileFromFile` 런타임 컴파일 유지
+- Rider: CMakePresets.json의 프리셋을 그대로 인식 (`macOS mingw (Debug)` 활성화, 기본 Debug 프로필은 끔)
 
 ## 배경 리서치 요약 (2026-08 조사)
 

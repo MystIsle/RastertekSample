@@ -29,34 +29,28 @@ brew install cmake ninja mingw-w64
 
 확인: `x86_64-w64-mingw32-g++ --version`
 
-## 2. Wine 설치 (둘 중 하나)
-
-### 옵션 A — wine-stable (공식 WineHQ 빌드, 간단)
-
-> `gcenx/wine/wine-crossover` cask는 2026-04에 탭에서 삭제됐다(구 Wine 8.0.1 기반).
-> 공식 `wine-stable`(Wine 11.x)로 대체 — DXMT 최신 버전도 Wine 10.18+ 를 지원한다.
+## 2. Wine 설치 — Game Porting Toolkit (2026-08 기준 확정 경로)
 
 ```sh
-brew install --cask wine-stable
-# Homebrew 5.0부터 --no-quarantine 플래그 제거됨. 실행이 Gatekeeper에 막히면:
-xattr -dr com.apple.quarantine "/Applications/Wine Stable.app"
+brew trust gcenx/wine          # Homebrew 5의 서드파티 탭 신뢰 절차
+brew install --cask game-porting-toolkit
 ```
 
-주의: `wine-stable` cask도 Gatekeeper 미통과를 이유로 deprecated 상태다(2026-09-01 비활성화 예고).
-그 이후에는 [Gcenx/macOS_Wine_builds releases](https://github.com/Gcenx/macOS_Wine_builds/releases)에서
-tarball을 직접 받아 `/Applications`에 넣으면 된다 (같은 빌드다).
+Gcenx가 패키징한 Apple GPTK 3.0. **D3DMetal(D3D11/12→Metal)이 내장**되어 있어서 별도
+변환 레이어 없이 D3D11 디바이스가 바로 생성된다 (튜토리얼 3의 `D3D11CreateDeviceAndSwapChain`
+성공 확인). cask postflight가 quarantine 제거/재서명까지 처리하므로 xattr 수동 조치 불필요.
+설치되는 명령은 `wine64` (`wine` 아님 — `scripts/mac-run.sh`가 알아서 찾는다).
 
-튜토리얼 2(창 띄우기)는 이것만으로 실행된다.
-튜토리얼 3+에서 D3D11 디바이스가 실제로 생성되기 시작하면 **DXMT**를 추가한다:
-[DXMT releases](https://github.com/3Shain/dxmt)에서 받아 프리픽스에 설치
-(설치법: [DXMT Installation Guide](https://github.com/3Shain/dxmt/wiki/DXMT-Installation-Guide-for-Geeks)).
+### 다른 경로들을 쓰지 않는 이유 (2026-08 시점 확인 결과)
 
-### 옵션 B — Apple Game Porting Toolkit (D3DMetal 내장)
-
-Apple 공식 D3D11/12→Metal 변환. Rosetta + x86_64 Homebrew가 필요해 설치가 무겁다.
-설치 절차는 [AppleGamingWiki GPTK 페이지](https://www.applegamingwiki.com/wiki/Game_Porting_Toolkit) 참고.
-
-**추천: 일단 옵션 A로 시작.** 렌더링 단계에서 DXMT가 안 되는 게 있으면 그때 GPTK 검토.
+- **wine-stable (공식 WineHQ 11.0)**: 창 띄우기(튜토리얼 2)까지는 되지만 macOS에선
+  wined3d가 GL 한계로 **FL 11_0 디바이스 생성 실패**. cask 자체도 Gatekeeper 문제로
+  deprecated (2026-09-01 비활성화 예고).
+- **DXMT**: winemac.drv에 Metal 뷰 심볼을 노출하는 **CrossOver 24+ 계열 Wine 전용**.
+  공식 Wine 11.0에 DXMT v0.80을 설치하면 로드는 되지만
+  "Failed to create metal view … no exported symbols" 로 실패한다.
+  호환 Wine의 무료 배포(Gcenx winecx)는 중단됨 — 유료 CrossOver를 쓰지 않는 한 현재로선 GPTK가 답.
+- **wine-crossover cask**: 2026-04 탭에서 삭제 (Wine 8.0.1 기반 구버전).
 
 ## 3. 빌드 & 실행
 
