@@ -4,8 +4,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-EXE=build-mac/RastertekSample.exe
-[ -f "$EXE" ] || { echo "먼저 scripts/mac-build.sh 로 빌드하세요."; exit 1; }
+# 인자 없으면 Debug(build-mac), "Release" 넘기면 build-mac-release, 경로를 직접 넘겨도 된다
+case "${1:-}" in
+    "")        EXE=build-mac/RastertekSample.exe ;;
+    Release)   EXE=build-mac-release/RastertekSample.exe ;;
+    *)         EXE="$1" ;;
+esac
+[ -f "$EXE" ] || { echo "$EXE 없음 — 먼저 scripts/mac-build.sh 로 빌드하세요."; exit 1; }
 
 # 프로젝트 전용 Wine 프리픽스 (시스템 오염 방지)
 export WINEPREFIX="$PWD/.wineprefix"
