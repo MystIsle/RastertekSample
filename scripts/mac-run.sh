@@ -12,8 +12,11 @@ case "${1:-}" in
 esac
 [ -f "$EXE" ] || { echo "$EXE 없음 — 먼저 scripts/mac-build.sh 로 빌드하세요."; exit 1; }
 
-# 프로젝트 전용 Wine 프리픽스 (시스템 오염 방지)
-export WINEPREFIX="$PWD/.wineprefix"
+# 프로젝트 전용 Wine 프리픽스 (시스템 오염 방지).
+# 리포지토리 밖에 두는 이유: 프리픽스 내부의 심볼릭 링크(dosdevices/z: → / 등) 때문에
+# IDE 인덱서가 디스크 전체를 크롤링하는 사고 방지 (CLion에서 실제 발생).
+export WINEPREFIX="${WINEPREFIX:-$HOME/Library/Caches/RastertekSample/wineprefix}"
+mkdir -p "$WINEPREFIX"
 export WINEDEBUG="${WINEDEBUG:--all}"
 
 # Wine 바이너리 탐색: GPTK(gameportingtoolkit)가 있으면 우선, 없으면 wine

@@ -21,8 +21,9 @@ if [ -z "$WINE_BIN" ]; then
 fi
 [ -n "$WINE_BIN" ] || { echo "winedbg 포함 Wine을 못 찾음. WINE_DEBUG_WINE=<wine경로> 로 지정하거나 docs/MAC_DEBUGGING.md 참고."; exit 1; }
 
-# GPTK 프리픽스와 분리된 디버깅 전용 프리픽스
-export WINEPREFIX="${WINEPREFIX:-$PWD/.wineprefix-debug}"
+# GPTK 프리픽스와 분리된 디버깅 전용 프리픽스 (리포지토리 밖 — mac-run.sh 주석 참고)
+export WINEPREFIX="${WINEPREFIX:-$HOME/Library/Caches/RastertekSample/wineprefix-debug}"
+mkdir -p "$WINEPREFIX"
 export WINEDEBUG="${WINEDEBUG:--all}"
 
 # winedbg는 유닉스식 경로를 못 받는다 — Windows식(Z:\...)으로 변환
