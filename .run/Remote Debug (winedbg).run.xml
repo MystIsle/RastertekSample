@@ -1,9 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Remote Debug (winedbg)" type="CLion_Remote" version="1"
-                 REMOTE_COMMAND="tcp:localhost:2159"
-                 SYMBOL_FILE="$PROJECT_DIR$/build-mac/RastertekSample.exe"
-                 SYSROOT="">
-    <debugger kind="GDB" isBundled="false" path="/opt/homebrew/bin/gdb" />
+  <configuration default="false" name="Remote Debug (winedbg)" type="CLion_Remote" version="1" toolchain="GDB (winedbg)" remoteCommand="tcp:localhost:2159" symbolFile="$PROJECT_DIR$/build-mac/RastertekSample.exe" sysroot="">
+    <debugger kind="GDB" />
     <method v="2" />
   </configuration>
 </component>
