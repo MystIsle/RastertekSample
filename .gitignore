@@ -76,3 +76,8 @@ x86/
 # Publish Web Output
 *.[Pp]ublish.xml
 .idea
+
+### CMake / Mac cross-build
+build*/
+cmake-build-*/
+.wineprefix/
