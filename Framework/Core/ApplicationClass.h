@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <Windows.h>
-#include "D3DClass.h"
+#include "Graphics/D3DClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;

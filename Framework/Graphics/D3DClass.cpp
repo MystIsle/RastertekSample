@@ -1,5 +1,5 @@
-#include "D3DClass.h"
-#include "Check.h"
+﻿#include "Graphics/D3DClass.h"
+#include "Core/Check.h"
 
 D3DClass::D3DClass()
 {

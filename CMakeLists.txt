@@ -17,17 +17,20 @@ endif()
 
 add_executable(RastertekSample WIN32
     main.cpp
-    Framework/SystemClass.cpp
-    Framework/InputClass.cpp
-    Framework/ApplicationClass.cpp
-    Framework/D3DClass.cpp
+    Framework/Core/SystemClass.cpp
+    Framework/Core/InputClass.cpp
+    Framework/Core/ApplicationClass.cpp
+    Framework/Graphics/D3DClass.cpp
     # 헤더 (IDE 표시용)
-    Framework/SystemClass.h
-    Framework/InputClass.h
-    Framework/ApplicationClass.h
-    Framework/D3DClass.h
-    Framework/Check.h
+    Framework/Core/SystemClass.h
+    Framework/Core/InputClass.h
+    Framework/Core/ApplicationClass.h
+    Framework/Core/Check.h
+    Framework/Graphics/D3DClass.h
 )
+
+# 하위 폴더에 관계없이 항상 "Core/...", "Graphics/...", "Shaders/..." 로 include 한다
+target_include_directories(RastertekSample PRIVATE Framework)
 
 target_compile_definitions(RastertekSample PRIVATE
     UNICODE _UNICODE

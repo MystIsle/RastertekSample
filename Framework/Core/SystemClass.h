@@ -4,8 +4,8 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <Windows.h>
-#include "InputClass.h"
-#include "ApplicationClass.h"
+#include "Core/InputClass.h"
+#include "Core/ApplicationClass.h"
 
 class SystemClass
 {

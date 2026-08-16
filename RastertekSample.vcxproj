@@ -76,6 +76,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,6 +92,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,6 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,6 +122,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,18 +131,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Framework\ApplicationClass.cpp" />
-    <ClCompile Include="Framework\D3DClass.cpp" />
-    <ClCompile Include="Framework\InputClass.cpp" />
-    <ClCompile Include="Framework\SystemClass.cpp" />
+    <ClCompile Include="Framework\Core\ApplicationClass.cpp" />
+    <ClCompile Include="Framework\Core\InputClass.cpp" />
+    <ClCompile Include="Framework\Core\SystemClass.cpp" />
+    <ClCompile Include="Framework\Graphics\D3DClass.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Framework\ApplicationClass.h" />
-    <ClInclude Include="Framework\Check.h" />
-    <ClInclude Include="Framework\D3DClass.h" />
-    <ClInclude Include="Framework\InputClass.h" />
-    <ClInclude Include="Framework\SystemClass.h" />
+    <ClInclude Include="Framework\Core\ApplicationClass.h" />
+    <ClInclude Include="Framework\Core\Check.h" />
+    <ClInclude Include="Framework\Core\InputClass.h" />
+    <ClInclude Include="Framework\Core\SystemClass.h" />
+    <ClInclude Include="Framework\Graphics\D3DClass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Framework\Core\README.md" />
+    <None Include="Framework\Graphics\README.md" />
+    <None Include="Framework\Shaders\README.md" />
+    <None Include="Framework\Text\README.md" />
+    <None Include="Framework\Utility\README.md" />
+    <None Include="assets\shaders\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
