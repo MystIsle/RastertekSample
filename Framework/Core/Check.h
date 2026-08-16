@@ -71,3 +71,13 @@ namespace Return
 			return __VA_ARGS__;									\
 		}														\
 	} while (false)
+
+template<typename T>
+void SafeRelease(T*& ptr)
+{
+	if (ptr)
+	{
+		ptr->Release();
+		ptr = nullptr;
+	}
+}

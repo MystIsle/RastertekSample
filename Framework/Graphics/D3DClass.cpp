@@ -74,14 +74,9 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	delete[] displayModeList;
 	displayModeList = nullptr;
 
-	adapterOutput->Release();
-	adapterOutput = nullptr;
-
-	adapter->Release();
-	adapter = nullptr;
-
-	factory->Release();
-	factory = nullptr;
+	SafeRelease(adapterOutput);
+	SafeRelease(adapter);
+	SafeRelease(factory);
 
 	// 스왑 체인 + 디바이스 + 컨텍스트 생성
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -124,8 +119,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	CHECK_RETURN(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr), false);
 	CHECK_RETURN(m_device->CreateRenderTargetView(backBufferPtr, nullptr, &m_renderTargetView), false);
 
-	backBufferPtr->Release();
-	backBufferPtr = nullptr;
+	SafeRelease(backBufferPtr);
 
 	// 깊이/스텐실 버퍼
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -225,53 +219,14 @@ void D3DClass::Shutdown()
 		m_swapChain->SetFullscreenState(false, nullptr);
 	}
 
-	if (m_rasterState)
-	{
-		m_rasterState->Release();
-		m_rasterState = nullptr;
-	}
-
-	if (m_depthStencilView)
-	{
-		m_depthStencilView->Release();
-		m_depthStencilView = nullptr;
-	}
-
-	if (m_depthStencilState)
-	{
-		m_depthStencilState->Release();
-		m_depthStencilState = nullptr;
-	}
-
-	if (m_depthStencilBuffer)
-	{
-		m_depthStencilBuffer->Release();
-		m_depthStencilBuffer = nullptr;
-	}
-
-	if (m_renderTargetView)
-	{
-		m_renderTargetView->Release();
-		m_renderTargetView = nullptr;
-	}
-
-	if (m_deviceContext)
-	{
-		m_deviceContext->Release();
-		m_deviceContext = nullptr;
-	}
-
-	if (m_device)
-	{
-		m_device->Release();
-		m_device = nullptr;
-	}
-
-	if (m_swapChain)
-	{
-		m_swapChain->Release();
-		m_swapChain = nullptr;
-	}
+	SafeRelease(m_rasterState);
+	SafeRelease(m_depthStencilView);
+	SafeRelease(m_depthStencilState);
+	SafeRelease(m_depthStencilBuffer);
+	SafeRelease(m_renderTargetView);
+	SafeRelease(m_deviceContext);
+	SafeRelease(m_device);
+	SafeRelease(m_swapChain);
 }
 
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)

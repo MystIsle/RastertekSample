@@ -73,8 +73,12 @@ MSVC와 mingw-w64(GCC) 둘 다에서 컴파일되어야 한다:
 - SAL 어노테이션(`_In_` 등)은 mingw에서도 정의되므로 사용 가능
 - UNICODE/_UNICODE는 CMake에서 정의됨. 문자열은 `L""` + `WCHAR` 계열 유지
 - 셰이더는 HLSL 파일 + `D3DCompileFromFile` 런타임 컴파일 (Wine의 d3dcompiler로 동작). fxc 사전 컴파일 의존 금지
-- 소스는 **UTF-8 BOM**으로 저장한다. MSVC는 BOM이 없으면 한글 주석을 시스템 코드페이지(CP949)로 읽어 C4819 경고를 낸다.
+- **C++ 소스(`.cpp`/`.h`)는 UTF-8 BOM으로 저장한다.** MSVC는 BOM이 없으면 한글 주석을 시스템 코드페이지(CP949)로 읽어 C4819 경고를 낸다.
   방어책으로 `/utf-8`을 vcxproj(`AdditionalOptions`)와 CMakeLists.txt(`target_compile_options`) 양쪽에 넣어뒀다. GCC(mingw)는 기본이 UTF-8이라 무관
+- **HLSL 파일(`.vs`/`.ps`)은 BOM 없이 저장한다 — C++와 반대다.**
+  `D3DCompileFromFile`은 BOM을 처리하지 못하고 `(1,1): error X3000: Illegal character in shader file`로 실패한다.
+  에디터가 BOM을 자동으로 붙이지 않는지 새 셰이더 추가 시마다 확인할 것 (`head -c 3 파일 | xxd` → `efbbbf`면 BOM 있음).
+  셰이더 컴파일 에러는 `OutputShaderErrorMessage`가 프로젝트 루트의 `shader-error.txt`에 기록한다
 
 ## 다음 할 일
 
@@ -92,4 +96,9 @@ MSVC와 mingw-w64(GCC) 둘 다에서 컴파일되어야 한다:
 - GPTK/D3DMetal, DXMT, DXVK 전부 Wine 기반 — macOS에서 D3D11의 "완전 네이티브" 실행은 불가
 - dxvk-native는 macOS 미지원. DXVK 2.x는 MoltenVK가 요구 Vulkan 기능 미충족으로 macOS에서 1.10.3 고정
 - D3D11 게임 실행 성능/호환성: DXMT ≥ D3DMetal > DXVK(macOS)
-- 진짜 네이티브가 필요해지면: Metal 직접 포팅 or Diligent Engine(D3D11 유사 API) — 튜토리얼 완주 후 별도 프로젝트로 검토
+- 진짜 네이티브가 필요해지면 (튜토리얼 완주 후 별도 프로젝트로 검토):
+  - Metal 직접 포팅
+  - Diligent Engine — **주의: "D3D11 유사 API"는 절반만 맞다.** 버퍼 생성·정점 바인딩·Map은 D3D11과 거의 1:1이지만,
+    렌더 상태는 PSO로 묶고 리소스는 SRB로 커밋한다(D3D12 개념). 공식 표현: "Diligent relates to BGFX as D3D12 relates to D3D11".
+    **Metal 백엔드는 상용 라이선스**(README 각주). 무료 macOS 경로는 MoltenVK 경유 Vulkan 또는 OpenGL 4.1뿐
+  - SDL3 GPU + SDL_shadercross — HLSL 유지 + 무료 네이티브 Metal을 동시에 만족하는 유일한 조합. 단 D3D11 백엔드가 없음(Vulkan/D3D12/Metal만)
