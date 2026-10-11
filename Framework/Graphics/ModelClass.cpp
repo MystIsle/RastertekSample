@@ -25,7 +25,10 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	CHECK_RETURN(result, false);
 	
 	result = LoadTexture(device, deviceContext, textureFilename);
-	CHECK_RETURN(result, false);
+	if (!result)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -72,12 +75,15 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // 좌하단.
 	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // 상단 중앙.
 	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
+	vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // 우하단.
 	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+	vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	indices[0] = 0;
 	indices[1] = 1;

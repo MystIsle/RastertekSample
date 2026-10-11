@@ -32,7 +32,7 @@
 | 헤더 | 매개변수 이름 항상 표기. 한 줄 게터는 인라인 `const` |
 | 군더더기 | void 끝 `return;`, 블록 뒤 빈 줄 2개, `using namespace std` in 헤더 금지 |
 | 줄 길이 | **120자 상한** (`.clang-format` `ColumnLimit`). 문서 코드 블록이 오토래핑이라 긴 줄은 읽기 깨짐 |
-| 네이밍 | **세트 A**: 타입·함수·파일 Pascal / 멤버 `m_camel` / 로컬·매개변수 camel / 상수·enum 값 Pascal(매크로만 UPPER). 폴더 `Core/Graphics/Shaders/Text/Utility` 유지. (대안 세트 B = Unreal식 접두사 없는 전부 Pascal + `b`bool — 손맛 우선이면 교체. `_camel`은 예약어 경계 때문에 제외) |
+| 네이밍 | 타입·함수·파일 Pascal / **멤버 `_camel`** (`_` 뒤 소문자만, `__` 금지 — 그 외엔 클래스 스코프에서 합법) / 로컬·매개변수 camel / 상수·enum 값 Pascal(매크로만 UPPER) / bool 접두사 없음. 폴더 `Core/Graphics/Shaders/Text/Utility` 유지. (2026-08-23 확정: `m_`는 번거롭고, Unreal식 무접두사 Pascal은 멤버/로컬 구분이 약해서 제외) |
 | 추상화 규칙 | **현재 튜토리얼이 요구하지 않는 추상화는 만들지 않는다. 중복은 3번째에서 뽑는다** (엔진화 함정 방지) |
 | 크로스컴파일 | 기존 CLAUDE.md 규칙 그대로 (`#pragma comment` 금지, BOM 규칙, 런타임 HLSL 컴파일) |
 
