@@ -23,7 +23,6 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char textureFilename[128];
 	bool result;
 
 	m_Direct3D = new D3DClass();
@@ -43,13 +42,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Model = new ModelClass();
 	CHECK_RETURN(m_Model, false);
 
-#ifdef _MSC_VER
-	strcpy_s(textureFilename, "assets/textures/stone01.tga");
-#else
-	snprintf(textureFilename, sizeof(textureFilename), "assets/textures/stone01.tga");
-#endif
+	char modelFilename[] = "assets/models/cube.txt";
+	char textureFilename[] = "assets/textures/stone01.tga";
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), textureFilename);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -111,7 +107,7 @@ bool ApplicationClass::Frame()
 	static float rotation = 0.f;
 	bool result;
 
-	rotation -= 0.0174532925f * 0.1f;
+	rotation -= 0.0174532925f * 0.25f;
 	if (rotation < 0.f)
 	{
 		rotation += 360.f;
