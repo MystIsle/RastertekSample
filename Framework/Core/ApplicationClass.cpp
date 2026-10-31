@@ -38,7 +38,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera = new CameraClass();
 	CHECK_RETURN(m_Camera, false);
 
-	m_Camera->SetPosition(0.f, 0.f, -5.f);
+	m_Camera->SetPosition(0.f, 0.f, -10.f);
 	m_Model = new ModelClass();
 	CHECK_RETURN(m_Model, false);
 
@@ -125,9 +125,9 @@ bool ApplicationClass::Frame()
 
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	
 	bool result;
-
 	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.f);
 	m_Camera->Render();
 
@@ -135,7 +135,9 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	
-	worldMatrix = XMMatrixRotationY(rotation);
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-2.f, 0.f, 0.f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
@@ -153,6 +155,26 @@ bool ApplicationClass::Render(float rotation)
 	{
 		return false;
 	}
+	
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(2.f, 0.f, 0.f);
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+	
+	//worldMatrix = scaleMatrix * rotateMatrix * translateMatrix;
+	//worldMatrix = translateMatrix * rotateMatrix * scaleMatrix;
+	
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(),
+							   m_Model->GetIndexCount(),
+							   worldMatrix,
+							   viewMatrix,
+							   projectionMatrix,
+							   m_Model->GetTexture(),
+							   m_Light->GetDirection(),
+							   m_Light->GetDiffuseColor()
+							  );
 
 	m_Direct3D->EndScene();
 
