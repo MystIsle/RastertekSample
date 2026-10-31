@@ -61,8 +61,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_Light = new LightClass();
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.f, 0.f, 1.f);
+	m_Light->SetDirection(1.f, 0.f, 0.f);
 	return true;
 }
 
@@ -148,6 +149,7 @@ bool ApplicationClass::Render(float rotation)
 	                               projectionMatrix,
 	                               m_Model->GetTexture(),
 	                               m_Light->GetDirection(),
+	                               m_Light->GetAmbientColor(),
 	                               m_Light->GetDiffuseColor()
 	                              );
 
@@ -173,9 +175,10 @@ bool ApplicationClass::Render(float rotation)
 							   projectionMatrix,
 							   m_Model->GetTexture(),
 							   m_Light->GetDirection(),
+							   m_Light->GetAmbientColor(),
 							   m_Light->GetDiffuseColor()
 							  );
-
+	
 	m_Direct3D->EndScene();
 
 	return true;
