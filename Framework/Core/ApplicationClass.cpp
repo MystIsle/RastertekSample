@@ -42,7 +42,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Model = new ModelClass();
 	CHECK_RETURN(m_Model, false);
 
-	char modelFilename[] = "assets/models/cube.txt";
+	char modelFilename[] = "assets/models/sphere.txt";
 	char textureFilename[] = "assets/textures/stone01.tga";
 
 	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
@@ -61,9 +61,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_Light = new LightClass();
+	m_Light->SetDirection(1.f, 0.f, 1.f);
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(1.f, 0.f, 0.f);
+	m_Light->SetSpecularColor(1.f, 0.f, 0.f, 1.f);
+	m_Light->SetSpecularPower(32.f);
 	return true;
 }
 
@@ -150,7 +152,10 @@ bool ApplicationClass::Render(float rotation)
 	                               m_Model->GetTexture(),
 	                               m_Light->GetDirection(),
 	                               m_Light->GetAmbientColor(),
-	                               m_Light->GetDiffuseColor()
+	                               m_Light->GetDiffuseColor(),
+	                               m_Camera->GetPosition(),
+	                               m_Light->GetSpecularColor(),
+	                               m_Light->GetSpecularPower()
 	                              );
 
 	if (!result)
@@ -176,7 +181,10 @@ bool ApplicationClass::Render(float rotation)
 							   m_Model->GetTexture(),
 							   m_Light->GetDirection(),
 							   m_Light->GetAmbientColor(),
-							   m_Light->GetDiffuseColor()
+							   m_Light->GetDiffuseColor(),
+							   m_Camera->GetPosition(),
+							   m_Light->GetSpecularColor(),
+							   m_Light->GetSpecularPower()
 							  );
 	
 	m_Direct3D->EndScene();
