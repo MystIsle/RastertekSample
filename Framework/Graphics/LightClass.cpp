@@ -13,6 +13,16 @@ LightClass::~LightClass()
 {
 }
 
+void LightClass::SetPosition(float x, float y, float z)
+{
+	m_position = XMFLOAT4(x,y,z, 1.f);
+}
+
+XMFLOAT4 LightClass::GetPosition()
+{
+	return m_position;
+}
+
 void LightClass::SetAmbientColor(float red, float green, float blue, float alpha)
 {
 	m_ambientColor = XMFLOAT4(red, green, blue, alpha);
