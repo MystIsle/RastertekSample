@@ -141,8 +141,14 @@ bool ApplicationClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
+	XMMATRIX spin = XMMatrixRotationY(0.01f);
+
 	for (int i = 0; i < m_numLights; i++)
 	{
+		XMFLOAT4 p = m_Lights[i].GetPosition();
+		XMVECTOR v = XMVector3Transform(XMVectorSet(p.x, p.y, p.z, 1.f), spin);
+		m_Lights[i].SetPosition(XMVectorGetX(v), XMVectorGetY(v), XMVectorGetZ(v));
+
 		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
