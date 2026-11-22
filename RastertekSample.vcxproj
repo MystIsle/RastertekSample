@@ -219,6 +219,7 @@
     </ClCompile>
     <ClCompile Include="Framework\Shaders\LightShaderClass.cpp" />
     <ClCompile Include="Framework\Shaders\TextureShaderClass.cpp" />
+    <ClCompile Include="Framework\UI\BitmapClass.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -234,12 +235,14 @@
     <ClInclude Include="Framework\Shaders\ColorShaderClass.h" />
     <ClInclude Include="Framework\Shaders\LightShaderClass.h" />
     <ClInclude Include="Framework\Shaders\TextureShaderClass.h" />
+    <ClInclude Include="Framework\UI\BitmapClass.h" />
+    <ClInclude Include="Framework\Utility\XMInt2Operators.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Framework\Core\README.md" />
     <None Include="Framework\Graphics\README.md" />
     <None Include="Framework\Shaders\README.md" />
-    <None Include="Framework\Text\README.md" />
+    <None Include="Framework\UI\README.md" />
     <None Include="Framework\Utility\README.md" />
     <None Include="assets\shaders\README.md" />
   </ItemGroup>

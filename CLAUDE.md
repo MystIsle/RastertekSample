@@ -43,7 +43,7 @@ macOS 빌드/실행:
 | `Framework/Core/` | D3D를 모르는 층 — 창·메시지 루프·입력·앱 골격 | `SystemClass`(튜토리얼 2), `ApplicationClass`, `InputClass`, `Check.h` |
 | `Framework/Graphics/` | 렌더링 장치·데이터·상태 | `D3DClass`(튜토리얼 3: 디바이스/스왑체인/깊이버퍼/래스터라이저/행렬) |
 | `Framework/Shaders/` | HLSL을 감싸는 C++ 래퍼 클래스 (완주 시 20개 이상이라 Graphics와 분리) | 비어 있음 |
-| `Framework/Text/` | 2D 스프라이트·폰트·텍스트 (튜토리얼 11~) | 비어 있음 |
+| `Framework/UI/` | 2D 스프라이트·폰트·텍스트 (튜토리얼 12~) | `BitmapClass`(튜토리얼 12) |
 | `Framework/Utility/` | Timer/Fps/Cpu/Position 등 보조 기능 (튜토리얼 12~) | 비어 있음 |
 | `assets/shaders/` | HLSL 원본 `.vs`/`.ps` — 코드가 아니라 런타임 로드 대상 | 비어 있음 |
 

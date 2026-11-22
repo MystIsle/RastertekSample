@@ -6,9 +6,8 @@ ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = nullptr;
 	m_Camera = nullptr;
-	m_Model = nullptr;
-	m_LightShader = nullptr;
-	m_Lights = nullptr;
+	m_TextureShader = nullptr;
+	m_Bitmap = nullptr;
 }
 
 ApplicationClass::ApplicationClass(const ApplicationClass&)
@@ -36,70 +35,37 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_Camera = new CameraClass();
-	CHECK_RETURN(m_Camera, false);
-
-	m_Camera->SetPosition(0.f, 2.f, -12.f);
+	m_Camera->SetPosition(0.f, 0.f, -10.f);
 	m_Camera->Render();
 	
-	char modelFilename[] = "assets/models/plane.txt";
-	char textureFilename[] = "assets/textures/stone01.tga";
-	
-	m_Model = new ModelClass();
-	CHECK_RETURN(m_Model, false);
-	
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	m_TextureShader = new TextureShaderClass;
+	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	m_LightShader = new LightShaderClass();
-	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-		return false;
-	}
-	
-	m_numLights = 4;
-
-	m_Lights = new LightClass[m_numLights];
-	
-	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
-
-	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
-
-	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
-
-	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
+	char bitmapFilename[] = "assets/textures/stone01.tga";
+	m_Bitmap = new BitmapClass;
+	result = m_Bitmap->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, bitmapFilename, 50, 50);
 	return true;
 }
 
 void ApplicationClass::Shutdown()
 {
-	if (m_Lights)
+	if (m_Bitmap)
 	{
-		delete[] m_Lights;
-		m_Lights = nullptr;
+		m_Bitmap->Shutdown();
+		delete m_Bitmap;
+		m_Bitmap = nullptr;
 	}
-
-	if (m_LightShader)
+	
+	if (m_TextureShader)
 	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = nullptr;
-	}
-
-	if (m_Model)
-	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = nullptr;
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = nullptr;
 	}
 
 	if (m_Camera)
@@ -130,8 +96,7 @@ bool ApplicationClass::Frame()
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	XMFLOAT4 diffuseColor[4], lightPosition[4];
+	XMMATRIX worldMatrix, viewMatrix, orthoMatrix;
 	
 	bool result;
 	m_Direct3D->BeginScene(0.f, 0.f, 0.f, 1.f);
@@ -139,37 +104,24 @@ bool ApplicationClass::Render()
 
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	XMMATRIX spin = XMMatrixRotationY(0.01f);
-
-	for (int i = 0; i < m_numLights; i++)
+	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+	
+	m_Direct3D->TurnZBufferOff();
+	
+	result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
+	if (!result)
 	{
-		XMFLOAT4 p = m_Lights[i].GetPosition();
-		XMVECTOR v = XMVector3Transform(XMVectorSet(p.x, p.y, p.z, 1.f), spin);
-		m_Lights[i].SetPosition(XMVectorGetX(v), XMVectorGetY(v), XMVectorGetZ(v));
-
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
-		lightPosition[i] = m_Lights[i].GetPosition();
+		return false;
 	}
-
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(),
-	                               m_Model->GetIndexCount(),
-	                               worldMatrix,
-	                               viewMatrix,
-	                               projectionMatrix,
-	                               m_Model->GetTexture(),
-	                               diffuseColor,
-	                               lightPosition
-	                              );
+	
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
 
 	if (!result)
 	{
 		return false;
 	}
-
+	
+	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->EndScene();
 
 	return true;

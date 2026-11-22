@@ -11,6 +11,7 @@ D3DClass::D3DClass()
 	m_depthStencilState = nullptr;
 	m_depthStencilView = nullptr;
 	m_rasterState = nullptr;
+	m_depthDisabledStencilState = nullptr;
 }
 
 D3DClass::D3DClass(const D3DClass&)
@@ -22,7 +23,8 @@ D3DClass::~D3DClass()
 
 }
 
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd,
+	bool fullscreen, float screenDepth, float screenNear)
 {
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
@@ -39,6 +41,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC rasterDesc;
 	float fieldOfView, screenAspect;
+	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
 
 	m_vsync_enabled = vsync;
 
@@ -207,6 +210,33 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
 	m_worldMatrix = XMMatrixIdentity();
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+	
+	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
+	
+	//뎁스 비활성화
+	depthDisabledStencilDesc.DepthEnable = false;
+	depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	
+	//스텐실 활성화 - 플래그 FF
+	depthDisabledStencilDesc.StencilEnable = true;
+	depthDisabledStencilDesc.StencilReadMask = 0xFF;
+	depthDisabledStencilDesc.StencilWriteMask = 0xFF;
+	
+	//프론트페이스
+	depthDisabledStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS; // 스텐실 비교
+	depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP; // 실패했을때
+	depthDisabledStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR; // 통과했지만 깊이 실패
+	depthDisabledStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP; // 모두 통과 했을때
+	
+	
+	//백페이스
+	depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthDisabledStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	
+	CHECK_RETURN(m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState), false);
 
 	return true;
 }
@@ -219,6 +249,7 @@ void D3DClass::Shutdown()
 		m_swapChain->SetFullscreenState(false, nullptr);
 	}
 
+	SafeRelease(m_depthDisabledStencilState);
 	SafeRelease(m_rasterState);
 	SafeRelease(m_depthStencilView);
 	SafeRelease(m_depthStencilState);
@@ -291,4 +322,14 @@ void D3DClass::SetBackBufferRenderTarget()
 void D3DClass::ResetViewport()
 {
 	m_deviceContext->RSSetViewports(1, &m_viewport);
+}
+
+void D3DClass::TurnZBufferOn()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
+}
+
+void D3DClass::TurnZBufferOff()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
 }

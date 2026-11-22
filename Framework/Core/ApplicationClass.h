@@ -3,10 +3,9 @@
 #include <Windows.h>
 #include "Graphics/D3DClass.h"
 #include "Graphics/CameraClass.h"
-#include "Graphics/ModelClass.h"
 #include "Shaders/TextureShaderClass.h"
-#include "Shaders/LightShaderClass.h"
-#include "Graphics/LightClass.h"
+#include "Graphics/TextureClass.h"
+#include "UI/BitmapClass.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -30,8 +29,6 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Lights;
-	int m_numLights;
+	TextureShaderClass* m_TextureShader;
+	BitmapClass* m_Bitmap;
 };
